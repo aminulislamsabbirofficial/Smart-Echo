@@ -1,6 +1,6 @@
 
 import { GoogleGenAI, Type, Modality, Chat } from "@google/genai";
-import { MathAnalysis, SupportedLanguage } from "../types";
+import { MathAnalysis, SupportedLanguage } from "../types.ts";
 
 export async function withRetry<T>(fn: () => Promise<T>, maxRetries = 3): Promise<T> {
   let lastError: any;

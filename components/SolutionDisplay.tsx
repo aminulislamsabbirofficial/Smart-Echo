@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { MathAnalysis, SupportedLanguage } from '../types';
+import { MathAnalysis, SupportedLanguage } from '../types.ts';
 
 interface SolutionDisplayProps {
   analysis: MathAnalysis;
@@ -12,7 +12,7 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ analysis, lang
   const hasSteps = analysis.steps && analysis.steps.length > 0;
   
   const labels = {
-    problem: language === 'Arabic' ? 'تحليل المسألة' : language === 'Urdu' ? 'مسئلہ کی وضاحت' : language === 'Hindi' ? 'सवाल की व्याख्या' : language === 'Bangla' ? 'সমস্যার বিশ্লেষণ' : 'Analysis',
+    problem: language === 'Arabic' ? 'تحليل المسألة' : language === 'Urdu' ? 'مسئلہ की وضاحت' : language === 'Hindi' ? 'सवाल की व्याख्या' : language === 'Bangla' ? 'সমস্যার বিশ্লেষণ' : 'Analysis',
     correction: language === 'Arabic' ? 'تصحيح الأخطاء' : language === 'Urdu' ? 'غلطی کی اصلاح' : language === 'Hindi' ? 'गलती सुधार' : language === 'Bangla' ? 'ভুল সংশোধন' : 'Verification',
     steps: language === 'Arabic' ? 'خطوات الحل' : language === 'Urdu' ? 'حل کے مراحل' : language === 'Hindi' ? 'समाधान के चरण' : language === 'Bangla' ? 'সমাধানের ধাপসমূহ' : 'Solution Steps',
     answer: language === 'Arabic' ? 'النتيجة النهائية' : language === 'Urdu' ? 'حتمی نتیجہ' : language === 'Hindi' ? 'अंतिम परिणाम' : language === 'Bangla' ? 'চূড়ান্ত ফলাফল' : 'Final Result',
@@ -79,7 +79,7 @@ export const SolutionDisplay: React.FC<SolutionDisplayProps> = ({ analysis, lang
       {/* Final Answer Highlight */}
       {analysis.finalAnswer && (
         <div className="bg-white dark:bg-white p-16 rounded-[56px] text-black shadow-3xl text-center relative overflow-hidden group apple-scan">
-          {/* Decorative Corners with position:absolute fixed via CSS */}
+          {/* Decorative Corners */}
           <div className="corner-tl"></div>
           <div className="corner-tr"></div>
           <div className="corner-bl"></div>

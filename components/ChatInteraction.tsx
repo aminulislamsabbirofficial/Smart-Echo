@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { MathAnalysis, SupportedLanguage, ChatMessage } from '../types';
-import { createTeacherChat, generateSpeech, decodeAudioData, withRetry } from '../services/geminiService';
+import { MathAnalysis, SupportedLanguage, ChatMessage } from '../types.ts';
+import { createTeacherChat, generateSpeech, decodeAudioData, withRetry } from '../services/geminiService.ts';
 
 interface ChatInteractionProps {
   analysis: MathAnalysis;

@@ -10,18 +10,19 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
       // Shim process.env for browser compatibility
-      window.process = window.process || { env: {} };
+      window.process = window.process || { env: { API_KEY: "" } };
       
       // Global error handler for debugging blank screens on mobile
       window.onerror = function(msg, url, lineNo, columnNo, error) {
+        console.error("Global error:", msg, "at", url, ":", lineNo);
         const root = document.getElementById('root');
-        if (root && root.innerHTML.trim() === '' || root.innerHTML.includes('Loading')) {
+        if (root && (root.innerHTML.trim() === '' || root.innerHTML.includes('Connecting'))) {
           root.innerHTML = `
-            <div style="padding: 40px; text-align: center; font-family: sans-serif;">
-              <h1 style="font-size: 20px; font-weight: 900; margin-bottom: 10px;">Startup Error</h1>
-              <p style="font-size: 14px; color: #666;">The app couldn't start. Please ensure your browser is up to date.</p>
-              <div style="margin-top: 20px; font-size: 10px; color: #ccc; word-break: break-all;">${msg}</div>
-              <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #000; color: #fff; border: none; border-radius: 20px; font-weight: 800;">Reload App</button>
+            <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #fff; position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <h1 style="font-size: 20px; font-weight: 900; margin-bottom: 10px; color: #000;">Startup Error</h1>
+              <p style="font-size: 14px; color: #666; max-width: 300px;">The app couldn't start. This usually happens on older browsers or if connection is slow.</p>
+              <div style="margin-top: 20px; font-size: 10px; color: #ccc; word-break: break-all; background: #f5f5f5; padding: 10px; border-radius: 8px;">${msg}</div>
+              <button onclick="location.reload()" style="margin-top: 30px; padding: 15px 30px; background: #000; color: #fff; border: none; border-radius: 30px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">Retry Connection</button>
             </div>
           `;
         }
@@ -91,18 +92,34 @@
     "react-dom": "https://esm.sh/react-dom@19.0.0",
     "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
     "@google/genai": "https://esm.sh/@google/genai@1.41.0",
-    "react/": "https://esm.sh/react@^19.2.4/",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
   }
 }
 </script>
+    <script type="module" src="index.tsx"></script>
 </head>
 <body class="bg-[#F8FAFC] dark:bg-[#0B0C10] text-[#1E293B] dark:text-[#F8FAFC] transition-colors duration-500 overflow-x-hidden selection:bg-black/5 dark:selection:bg-white/5">
     <div id="root">
       <div class="fixed inset-0 flex flex-col items-center justify-center p-10 text-center animate-pulse">
-        <div class="w-12 h-12 bg-black dark:bg-white rounded-2xl mb-6"></div>
-        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300 dark:text-white/10">Loading Smart Echo...</p>
+        <div class="w-12 h-12 bg-black dark:bg-white rounded-2xl mb-6 shadow-xl"></div>
+        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-400 dark:text-white/20">Initializing Smart Echo...</p>
       </div>
     </div>
+    <script>
+      // Fail-safe: if the app hasn't loaded in 10 seconds, check for common issues
+      setTimeout(() => {
+        const root = document.getElementById('root');
+        if (root && root.innerText.includes('Initializing')) {
+          root.innerHTML = `
+            <div style="padding: 40px; text-align: center; font-family: sans-serif; background: #fff; position: fixed; inset: 0; z-index: 9999; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+              <h1 style="font-size: 20px; font-weight: 900; margin-bottom: 10px; color: #000;">Connection Issue</h1>
+              <p style="font-size: 14px; color: #666; max-width: 300px;">The app is taking a long time to start. This might be due to a slow connection or an incompatible browser.</p>
+              <button onclick="location.reload()" style="margin-top: 30px; padding: 15px 30px; background: #000; color: #fff; border: none; border-radius: 30px; font-weight: 800; cursor: pointer; text-transform: uppercase; letter-spacing: 1px;">Refresh Page</button>
+            </div>
+          `;
+        }
+      }, 10000);
+    </script>
 </body>
 </html>

@@ -1,9 +1,9 @@
 
 import React, { useState, useRef, useEffect } from 'react';
-import { analyzeMathProblem, generateSpeech, decodeAudioData, getGeminiAI, createPcmBlob, decode } from './services/geminiService';
-import { MathAnalysis, AudioState, SupportedLanguage, RecentSolution } from './types';
-import { SolutionDisplay } from './components/SolutionDisplay';
-import { ChatInteraction } from './components/ChatInteraction';
+import { analyzeMathProblem, generateSpeech, decodeAudioData, getGeminiAI, createPcmBlob, decode } from './services/geminiService.ts';
+import { MathAnalysis, AudioState, SupportedLanguage, RecentSolution } from './types.ts';
+import { SolutionDisplay } from './components/SolutionDisplay.tsx';
+import { ChatInteraction } from './components/ChatInteraction.tsx';
 import { Modality, LiveServerMessage } from '@google/genai';
 
 const LANGUAGES: SupportedLanguage[] = ['English', 'Bangla', 'Hindi', 'Urdu', 'Arabic'];

@@ -5,8 +5,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Smart Echo | AI Math Mentor</title>
+    <!-- Polyfill for Import Maps support on older mobile browsers -->
+    <script async src="https://ga.jspm.io/npm:es-module-shims@1.10.1/dist/es-module-shims.js"></script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
+      // Shim process.env for browser compatibility
+      window.process = window.process || { env: {} };
+      
+      // Global error handler for debugging blank screens on mobile
+      window.onerror = function(msg, url, lineNo, columnNo, error) {
+        const root = document.getElementById('root');
+        if (root && root.innerHTML.trim() === '' || root.innerHTML.includes('Loading')) {
+          root.innerHTML = `
+            <div style="padding: 40px; text-align: center; font-family: sans-serif;">
+              <h1 style="font-size: 20px; font-weight: 900; margin-bottom: 10px;">Startup Error</h1>
+              <p style="font-size: 14px; color: #666;">The app couldn't start. Please ensure your browser is up to date.</p>
+              <div style="margin-top: 20px; font-size: 10px; color: #ccc; word-break: break-all;">${msg}</div>
+              <button onclick="location.reload()" style="margin-top: 20px; padding: 10px 20px; background: #000; color: #fff; border: none; border-radius: 20px; font-weight: 800;">Reload App</button>
+            </div>
+          `;
+        }
+        return false;
+      };
+
       tailwind.config = {
         darkMode: 'class',
         theme: {
@@ -28,110 +49,36 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
     <style>
-      :root {
-        --primary: #FFFFFF;
-        --accent: #16171D;
-        --bg: #F8FAFC;
-      }
-      .dark {
-        --primary: #16171D;
-        --accent: #FFFFFF;
-        --bg: #0B0C10;
-      }
-      body { 
-        font-family: 'Inter', sans-serif; 
-        -webkit-font-smoothing: antialiased;
-        background-color: var(--bg);
-        transition: background-color 0.5s ease;
-      }
-      .glass { 
-        background: rgba(255, 255, 255, 0.7); 
-        backdrop-filter: blur(24px); 
-        -webkit-backdrop-filter: blur(24px);
-        border: 1px solid rgba(0, 0, 0, 0.05); 
-      }
-      .dark .glass { 
-        background: rgba(11, 12, 16, 0.8); 
-        border: 1px solid rgba(255, 255, 255, 0.03); 
-      }
-      
-      .gradient-mono {
-        background: linear-gradient(135deg, #000000 0%, #333333 100%);
-      }
-      .dark .gradient-mono {
-        background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
-      }
-      .gradient-pink {
-        background: linear-gradient(135deg, #E2136E 0%, #ff4d97 100%);
-      }
-
-      /* Sparkle Animation */
-      @keyframes sparkle {
-        0%, 100% { transform: scale(0.5); opacity: 0; }
-        50% { transform: scale(1.2); opacity: 1; }
-      }
-      .sparkle-star {
-        position: absolute;
-        animation: sparkle 2s infinite ease-in-out;
-      }
+      :root { --primary: #FFFFFF; --accent: #16171D; --bg: #F8FAFC; }
+      .dark { --primary: #16171D; --accent: #FFFFFF; --bg: #0B0C10; }
+      body { font-family: 'Inter', sans-serif; -webkit-font-smoothing: antialiased; background-color: var(--bg); transition: background-color 0.5s ease; }
+      .glass { background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(24px); -webkit-backdrop-filter: blur(24px); border: 1px solid rgba(0, 0, 0, 0.05); }
+      .dark .glass { background: rgba(11, 12, 16, 0.8); border: 1px solid rgba(255, 255, 255, 0.03); }
+      .gradient-mono { background: linear-gradient(135deg, #000000 0%, #333333 100%); }
+      .dark .gradient-mono { background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%); }
+      .gradient-pink { background: linear-gradient(135deg, #E2136E 0%, #ff4d97 100%); }
+      @keyframes sparkle { 0%, 100% { transform: scale(0.5); opacity: 0; } 50% { transform: scale(1.2); opacity: 1; } }
+      .sparkle-star { position: absolute; animation: sparkle 2s infinite ease-in-out; }
       .sparkle-1 { top: -5px; left: -5px; animation-delay: 0s; font-size: 10px; }
       .sparkle-2 { top: 5px; left: -12px; animation-delay: 0.5s; font-size: 14px; }
       .sparkle-3 { top: -12px; left: 8px; animation-delay: 1.2s; font-size: 8px; }
-
-      @keyframes wave {
-        0%, 100% { transform: scaleY(1); opacity: 0.5; }
-        50% { transform: scaleY(2.8); opacity: 1; }
-      }
+      @keyframes wave { 0%, 100% { transform: scaleY(1); opacity: 0.5; } 50% { transform: scaleY(2.8); opacity: 1; } }
       .wave-bar { animation: wave 1.2s ease-in-out infinite; }
-
-      @keyframes scan {
-        0%, 100% { transform: translateY(-150px); opacity: 0; }
-        50% { transform: translateY(150px); opacity: 1; }
-      }
-      
+      @keyframes scan { 0%, 100% { transform: translateY(-150px); opacity: 0; } 50% { transform: translateY(150px); opacity: 1; } }
       .typing-dot { animation: typing 1.4s infinite; }
-      @keyframes typing {
-        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
-        30% { opacity: 1; transform: translateY(-4px); }
-      }
-      
-      .celebrate {
-        animation: celebrate 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
-      }
-      @keyframes celebrate {
-        0% { transform: scale(0.95); opacity: 0; }
-        70% { transform: scale(1.02); opacity: 1; }
-        100% { transform: scale(1); opacity: 1; }
-      }
-
-      /* Custom Scrollbar */
+      @keyframes typing { 0%, 60%, 100% { opacity: 0.3; transform: translateY(0); } 30% { opacity: 1; transform: translateY(-4px); } }
+      .celebrate { animation: celebrate 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards; }
+      @keyframes celebrate { 0% { transform: scale(0.95); opacity: 0; } 70% { transform: scale(1.02); opacity: 1; } 100% { transform: scale(1); opacity: 1; } }
       ::-webkit-scrollbar { width: 4px; }
       ::-webkit-scrollbar-track { background: transparent; }
       ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
       .dark ::-webkit-scrollbar-thumb { background: #1e293b; }
-      
       .no-scrollbar::-webkit-scrollbar { display: none; }
       .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-
-      /* Apple Scan Corner Fixes */
-      .apple-scan {
-        position: relative;
-        border: 1px solid rgba(0,0,0,0.05);
-      }
-      .dark .apple-scan {
-        border: 1px solid rgba(255,255,255,0.05);
-      }
-      .corner-tl, .corner-tr, .corner-bl, .corner-br { 
-        position: absolute; 
-        width: 24px; 
-        height: 24px; 
-        border-color: rgba(0,0,0,0.2); 
-        border-style: solid;
-        pointer-events: none;
-      }
-      .dark .corner-tl, .dark .corner-tr, .dark .corner-bl, .dark .corner-br { 
-        border-color: rgba(255,255,255,0.3); 
-      }
+      .apple-scan { position: relative; border: 1px solid rgba(0,0,0,0.05); }
+      .dark .apple-scan { border: 1px solid rgba(255,255,255,0.05); }
+      .corner-tl, .corner-tr, .corner-bl, .corner-br { position: absolute; width: 24px; height: 24px; border-color: rgba(0,0,0,0.2); border-style: solid; pointer-events: none; }
+      .dark .corner-tl, .dark .corner-tr, .dark .corner-bl, .dark .corner-br { border-color: rgba(255,255,255,0.3); }
       .corner-tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
       .corner-tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; border-radius: 0 8px 0 0; }
       .corner-bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; border-radius: 0 0 0 8px; }
@@ -140,17 +87,22 @@
     <script type="importmap">
 {
   "imports": {
-    "react": "https://esm.sh/react@^19.2.4",
-    "react-dom": "https://esm.sh/react-dom@^19.2.4",
-    "react-dom/client": "https://esm.sh/react-dom@^19.2.4/client",
-    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
-    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
-    "react/": "https://esm.sh/react@^19.2.4/"
+    "react": "https://esm.sh/react@19.0.0",
+    "react-dom": "https://esm.sh/react-dom@19.0.0",
+    "react-dom/client": "https://esm.sh/react-dom@19.0.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@1.41.0",
+    "react/": "https://esm.sh/react@^19.2.4/",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/"
   }
 }
 </script>
 </head>
 <body class="bg-[#F8FAFC] dark:bg-[#0B0C10] text-[#1E293B] dark:text-[#F8FAFC] transition-colors duration-500 overflow-x-hidden selection:bg-black/5 dark:selection:bg-white/5">
-    <div id="root"></div>
+    <div id="root">
+      <div class="fixed inset-0 flex flex-col items-center justify-center p-10 text-center animate-pulse">
+        <div class="w-12 h-12 bg-black dark:bg-white rounded-2xl mb-6"></div>
+        <p class="text-[10px] font-black uppercase tracking-[0.5em] text-slate-300 dark:text-white/10">Loading Smart Echo...</p>
+      </div>
+    </div>
 </body>
 </html>

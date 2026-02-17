@@ -1,0 +1,156 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Echo | AI Math Mentor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            colors: {
+              midnight: '#0B0C10',
+              graphite: '#16171D',
+              silver: '#F8FAFC',
+              bkash: '#E2136E',
+            },
+            boxShadow: {
+              '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+              'inner-lg': 'inset 0 2px 4px 0 rgba(0, 0, 0, 0.06)',
+            }
+          }
+        }
+      }
+    </script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <style>
+      :root {
+        --primary: #FFFFFF;
+        --accent: #16171D;
+        --bg: #F8FAFC;
+      }
+      .dark {
+        --primary: #16171D;
+        --accent: #FFFFFF;
+        --bg: #0B0C10;
+      }
+      body { 
+        font-family: 'Inter', sans-serif; 
+        -webkit-font-smoothing: antialiased;
+        background-color: var(--bg);
+        transition: background-color 0.5s ease;
+      }
+      .glass { 
+        background: rgba(255, 255, 255, 0.7); 
+        backdrop-filter: blur(24px); 
+        -webkit-backdrop-filter: blur(24px);
+        border: 1px solid rgba(0, 0, 0, 0.05); 
+      }
+      .dark .glass { 
+        background: rgba(11, 12, 16, 0.8); 
+        border: 1px solid rgba(255, 255, 255, 0.03); 
+      }
+      
+      .gradient-mono {
+        background: linear-gradient(135deg, #000000 0%, #333333 100%);
+      }
+      .dark .gradient-mono {
+        background: linear-gradient(135deg, #ffffff 0%, #cccccc 100%);
+      }
+      .gradient-pink {
+        background: linear-gradient(135deg, #E2136E 0%, #ff4d97 100%);
+      }
+
+      /* Sparkle Animation */
+      @keyframes sparkle {
+        0%, 100% { transform: scale(0.5); opacity: 0; }
+        50% { transform: scale(1.2); opacity: 1; }
+      }
+      .sparkle-star {
+        position: absolute;
+        animation: sparkle 2s infinite ease-in-out;
+      }
+      .sparkle-1 { top: -5px; left: -5px; animation-delay: 0s; font-size: 10px; }
+      .sparkle-2 { top: 5px; left: -12px; animation-delay: 0.5s; font-size: 14px; }
+      .sparkle-3 { top: -12px; left: 8px; animation-delay: 1.2s; font-size: 8px; }
+
+      @keyframes wave {
+        0%, 100% { transform: scaleY(1); opacity: 0.5; }
+        50% { transform: scaleY(2.8); opacity: 1; }
+      }
+      .wave-bar { animation: wave 1.2s ease-in-out infinite; }
+
+      @keyframes scan {
+        0%, 100% { transform: translateY(-150px); opacity: 0; }
+        50% { transform: translateY(150px); opacity: 1; }
+      }
+      
+      .typing-dot { animation: typing 1.4s infinite; }
+      @keyframes typing {
+        0%, 60%, 100% { opacity: 0.3; transform: translateY(0); }
+        30% { opacity: 1; transform: translateY(-4px); }
+      }
+      
+      .celebrate {
+        animation: celebrate 0.6s cubic-bezier(0.17, 0.67, 0.83, 0.67) forwards;
+      }
+      @keyframes celebrate {
+        0% { transform: scale(0.95); opacity: 0; }
+        70% { transform: scale(1.02); opacity: 1; }
+        100% { transform: scale(1); opacity: 1; }
+      }
+
+      /* Custom Scrollbar */
+      ::-webkit-scrollbar { width: 4px; }
+      ::-webkit-scrollbar-track { background: transparent; }
+      ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+      .dark ::-webkit-scrollbar-thumb { background: #1e293b; }
+      
+      .no-scrollbar::-webkit-scrollbar { display: none; }
+      .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+      /* Apple Scan Corner Fixes */
+      .apple-scan {
+        position: relative;
+        border: 1px solid rgba(0,0,0,0.05);
+      }
+      .dark .apple-scan {
+        border: 1px solid rgba(255,255,255,0.05);
+      }
+      .corner-tl, .corner-tr, .corner-bl, .corner-br { 
+        position: absolute; 
+        width: 24px; 
+        height: 24px; 
+        border-color: rgba(0,0,0,0.2); 
+        border-style: solid;
+        pointer-events: none;
+      }
+      .dark .corner-tl, .dark .corner-tr, .dark .corner-bl, .dark .corner-br { 
+        border-color: rgba(255,255,255,0.3); 
+      }
+      .corner-tl { top: -1px; left: -1px; border-width: 3px 0 0 3px; border-radius: 8px 0 0 0; }
+      .corner-tr { top: -1px; right: -1px; border-width: 3px 3px 0 0; border-radius: 0 8px 0 0; }
+      .corner-bl { bottom: -1px; left: -1px; border-width: 0 0 3px 3px; border-radius: 0 0 0 8px; }
+      .corner-br { bottom: -1px; right: -1px; border-width: 0 3px 3px 0; border-radius: 0 0 8px 0; }
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@^19.2.4",
+    "react-dom": "https://esm.sh/react-dom@^19.2.4",
+    "react-dom/client": "https://esm.sh/react-dom@^19.2.4/client",
+    "@google/genai": "https://esm.sh/@google/genai@^1.41.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.4/",
+    "react/": "https://esm.sh/react@^19.2.4/"
+  }
+}
+</script>
+</head>
+<body class="bg-[#F8FAFC] dark:bg-[#0B0C10] text-[#1E293B] dark:text-[#F8FAFC] transition-colors duration-500 overflow-x-hidden selection:bg-black/5 dark:selection:bg-white/5">
+    <div id="root"></div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+{
+  "name": "Smart Echo",
+  "description": "A clever AI assistant that solves handwritten math problems and explains them clearly using voice and visual feedback.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
